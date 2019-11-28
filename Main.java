@@ -10,9 +10,9 @@ public class Main {
 		trie.insert("teste");
 		trie.insert("nataly");
 		
-		boolean search = trie.search("teste");
+		boolean search = trie.find("teste");
 		
-		System.out.println(seacrh);
+		System.out.println(search);
 	}
 
 }

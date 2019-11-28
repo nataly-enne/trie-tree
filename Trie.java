@@ -32,7 +32,7 @@ public class Trie{
 		}
 	}
 
-	public boolean search(String word) {
+	public boolean find(String word) {
 		
 		HashMap<Character, TrieNode> children = current.getChildren();
 

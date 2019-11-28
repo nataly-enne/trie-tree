@@ -4,7 +4,7 @@ public class TrieNode{
 	// caracter que contém o caracter corrente do nó
 	private char character;
 	// um hashmap que contém todos os filhos
-	private HashMAp<Character, TrieNode> children = new HashMap();
+	private HashMap<Character, TrieNode> children = new HashMap();
 	// variável booleana pra saber se o nó ou caracter representa o fim de uma palavra
 	private boolean isWord;
 
