@@ -2,15 +2,17 @@ import java.util.*;
 
 public class Trie{
 
-	private TrieNode current;
+	private TrieNode root;
+	private List<String> wordList = new ArrayList<>();
+
 
 	public Trie() {
-		current = new TrieNode();
+		root = new TrieNode();
 	}
 
 	public void insert(String word) {
 		
-		HashMap <Character, TrieNode> children = current.getChildren();
+		HashMap <Character, TrieNode> children = root.getChildren();
 		
 		for(int i = 0; i < word.length(); i++) {
 			char character = word.charAt(i);
@@ -33,10 +35,14 @@ public class Trie{
 			}
 		}
 	}
-
-	public boolean find(String word) {
+	public void insert(String[] wordList) {
+        for (String word : wordList) {
+            this.insert(word);
+        }
+    }
+	public boolean search(String word) {
 		
-		HashMap<Character, TrieNode> children = current.getChildren();
+		HashMap<Character, TrieNode> children = root.getChildren();
 
 		TrieNode node = null;
 		
@@ -52,7 +58,6 @@ public class Trie{
 				break;
 			}
 		}
-
 		if(node != null && node.isWord()) {
 			return true;
 		} 
@@ -61,99 +66,68 @@ public class Trie{
 		}
 	}
 
+	// checagem da existencia para poder deletar.
+ 	public boolean find(String word) {
+        
+        TrieNode node = this.root;
+        boolean itFound = true;
 
-	public boolean remove(String word) {
-    
-        if (find(word)) {
-    
-            TrieNode removeBeneath = root;
-            TrieNode current = root; // nó atual
-            TrieNode wordNode = findNode(word);
-            
-            int deleteCharacter = 0; // variável para indicar caracter inicial. 
-
-            wordNode.setWord(false);
-            wordNode.setText("");
-
-            if (wordNode.getChildren().isEmpty()) { // verifica se está vazio
-                for (int i = 0; i < word.length(); i++) {
-                    char currenCharacter = word.charAt(i);
-
-                    if (currentNode.isWord()) {
-                        removeBeneath = currentNode;
-                        deleteCharacter = (i);
-                    }
-
-                    currentNode = currentNode.getChildren().get(currenCharacter);
-                }
-
-                removeNodes(removeBeneath, word, deleteCharacter);
-
-                return true;
+        for (char character: word.toCharArray()) {
+            if (!node.getChildren().containsKey(character)) {
+                itFound = false;
+                break;
             }
-            return true;
+            node = node.getChildren().get(character);
         }
-        return false;
+        return node != null && node.isWord() && itFound;
     }
 
-    // Deleta os nós, passando por parâmetro -> 1. nó inicial; 2. palavra; 3. caracter inicial
-    public void removeNodes(TrieNode node, String word, int character) {
+    public void remove(String word) {
         
-        Stack <TrieNode> nodeStack = new Stack<>(); // criando o nó pilha
+        TrieNode node = this.root;
         
-        TrieNode currentNode = node; // iguala ao nó inicial
-        
-        int nodeToDeletePosition = (word.length() - 1);
-
-        for (int i = character; i < (word.length() - 1); i++) { // i = ao caracter inicial
-            char currenCharacter = word.charAt(i);
-            nodeStack.push(currentNode);
-            currentNode = currentNode.getChildren().get(currenCharacter);
-        }
-
-        while (!nodeStack.empty()) {
-            currentNode = nodeStack.pop();
-            currentNode.getChildren().remove(word.charAt(nodeToDeletePosition));
-            nodeToDeletePosition--;
+        if (this.find(word)) {
+            for (char character: word.toCharArray()) {
+                node = node.getChildren().get(character);
+            }
+            node.setWord(false);
         }
     }
 
-    public List<String> suggestions(String prefix) {
-        TrieNode prefixNode = findNode(prefix);
-        List<String> results;
+    public List<String> autocomplete(String word) {
+        TrieNode suggestNode = findNode(word);
+        List<String> out;
 
-        results = getWords(prefixNode);
+        out = getWords(suggestNode);
+        System.out.println(out);
 
-        return results;
+        return out;
     }
 
-    public List<String> suggestions(String prefix, int maxSuggestions) {
-        TrieNode prefixNode = findNode(prefix);
-        List<String> results;
+    public List<String> autocomplete(String word, int maxSuggestions) {
+        TrieNode suggestNode = findNode(word);
+        List<String> out;
 
-        results = getWords(prefixNode);
+        out = getWords(suggestNode);
 
-        for (int i = maxSuggestions; i < results.size(); i++) {
-            results.remove(i);
+        for (int i = maxSuggestions; i < out.size(); i++) {
+            out.remove(i);
         }
-
-        return results;
+        return out;
     }
 
     public TrieNode findNode(String string) {
         TrieNode currentNode = root;
 
         for (int i = 0; i < string.length(); i++) {
-            Character currenCharacter = string.charAt(i);
-            TrieNode currenCharacterNode = currentNode.getChildren().get(currenCharacter);
+            Character currentCharacter = string.charAt(i);
+            TrieNode currentCharacterNode = currentNode.getChildren().get(currentCharacter);
 
-            if (currenCharacterNode == null) {
+            if (currentCharacterNode == null) {
                 return null;
             }
-
-            currentNode = currenCharacterNode;
+            currentNode = currentCharacterNode;
         }
-
         return currentNode;
     }
 
@@ -169,17 +143,9 @@ public class Trie{
                 results.addAll(getWords(child));
             }
         }
-
-        sortWords(results);
-
-        return results;
-    }
-
-    public void sortWords(List<String> words) {
-        for (int i = 0; i < (words.size() - 1); i++) {
-            if (words.get(i).length() > words.get(i + 1).length()) {
-                Collections.swap(words, i, (i + 1));
-            }
-        }
+    	return results;
     }
 }
+
+
+   
