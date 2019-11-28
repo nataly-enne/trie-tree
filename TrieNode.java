@@ -1,15 +1,17 @@
+import java.util.*;
+
 public class TrieNode{
 	// caracter que contém o caracter corrente do nó
-	private char c;
+	private char character;
 	// um hashmap que contém todos os filhos
 	private HashMAp<Character, TrieNode> children = new HashMap();
 	// variável booleana pra saber se o nó ou caracter representa o fim de uma palavra
-	private boolean isLeaf;
+	private boolean isWord;
 
 	public TrieNode() {}
 
-	public TrieNode(char c){
-		this.c = c;
+	public TrieNode(char character){
+		this.character = character;
 	}
 
 	public HashMap<Character, TrieNode> getChildren(){
@@ -20,11 +22,11 @@ public class TrieNode{
 		this.children = children;
 	}
 
-	public boolean isLeaf(){
-		return isLeaf;
+	public boolean isWord(){
+		return isWord;
 	}
 
-	public void setLeaf(boolean isLeaf){
-		this.isLeaf = isLeaf;
+	public void setWord(boolean isWord){
+		this.isWord = isWord;
 	}
 }
